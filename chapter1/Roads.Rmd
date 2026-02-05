@@ -1,0 +1,64 @@
+---
+title: "roads"
+author: "Mary OConnor"
+date: "22/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+### 1. Load libraries and data
+### load libraries
+library(MuMIn)
+library(nlme)
+library(plyr)
+library(tidyverse) 
+library(broom)
+library(reshape2)
+library(knitr)
+library(gridExtra)
+```
+
+```{r load data}
+### load data
+USroads <- read.csv("./USroads.csv")
+class(USroads$X)
+class(USroads$TOTAL.paved.and.unpaved)
+USroads$Total <- gsub(",", "", USroads$TOTAL.paved.and.unpaved)   
+class(USroads$Total)
+
+USroads1 <- USroads[(USroads$Total != "N"),]
+USroads2 <- na.omit(USroads1)
+USroads2$Total <- as.numeric((USroads2$Total))
+
+US
+```
+
+```{r US roads figure}
+Fig_USroads <- ggplot(data = USroads2, aes(x = X, y = Total, ymin = 3500, ymax = 4200)) + 
+    geom_point() +
+  theme_bw() +
+  theme(legend.position = "none",
+        panel.grid.minor = element_blank(), 
+        panel.grid.major = element_blank(),  
+        legend.text = element_text(size = 5), 
+        legend.title = element_text(size = 5), 
+        legend.key = element_rect(fill = NA), 
+        axis.text = element_text(size = 10),
+        strip.background = element_rect(colour="white", fill="white"),
+        plot.title = element_text(hjust = -1)) +
+  ggtitle("US roads") +
+  ylab("Road length (1000 Miles)") +
+  xlab("")
+
+
+Fig_USroads
+
+ggsave("Fig1_2.pdf", device = "pdf", path = "../figures/", width = 5, height = 3, dpi = 300, units = "in")
+```
+
+
+
